@@ -7,14 +7,18 @@ var game = {
 		this.triesMade = 0;
 		this.lastGuess = undefined;
 		this.currentGuess = undefined;
+		this.hintShown = false;
 	},
 	isWon: function(){
 		return this.numberToGuess === this.currentGuess;
+	},
+	isLost: function(){
+		return this.triesMade === this.triesMax;
 	}
 };
 
 var hotness = {
-	hotness: "",
+	level: "",
 	advice: "",
 	progress: "",
 	max: false,
@@ -31,17 +35,17 @@ var hotness = {
 	},
 	setHotness: function(toGuess, guess){
 		var diff = Math.abs(toGuess - guess);
-		var hotness;
+		var hotnessLevel;
 		if(diff > 20){
-			hotness = "Cold";
+			hotnessLevel = "Cold";
 		} else if(diff <= 20 && diff > 10){
-			hotness = "Warm";
+			hotnessLevel = "Warm";
 		} else if(diff <= 10 && diff >= 1){
-			hotness = "Hot";
+			hotnessLevel = "Hot";
 		}else {
-			hotness = "Hottest";
+			hotnessLevel = "Hottest";
 		}
-		this.hotness = hotness;
+		this.level = hotnessLevel;
 	},
 	setAdvice: function(toGuess, guess){
 		this.advice = toGuess - guess < 0 ? "lower" : "higher";
@@ -57,7 +61,7 @@ var hotness = {
 		if(this.max){
 			msg = "You guessed right!";
 		} else {
-			msg = this.hotness + " and you are getting " + this.progress;
+			msg = this.level + " and you are getting " + this.progress;
 			msg += ". Guess " + this.advice + "!";
 		}
 		return msg;
@@ -66,27 +70,25 @@ var hotness = {
 
 
 var formView = {
-	init: function(){
-		$("#guessForm").on("submit", function(event){
+	init: function(triesMade, triesMax){
+		var guessForm = $("#guessForm");
+		var refreshButton = $("button .glyphicon-refresh");
+		guessForm.off("submit");
+		guessForm.on("submit", function(event){
 			event.preventDefault();
 			var numInput = $("#guessedNumber");
 			var guess = numInput.val();
 			numInput.val("");
 			gameController.guessSubmitted(guess);
 		});
-		$("button .glyphicon-refresh").on("click", function(){
+		refreshButton.off("click");
+		refreshButton.on("click", function(){
 			gameController.refresh();
 		});
-		$("button .glyphicon-eye-open").on("click", function(){
-			$("#theHint").fadeToggle();
-		});
-		this.render();
+		this.render(triesMade, triesMax);
 	},
-	render: function(){
-		var triesMade = gameController.getTriesMade();
-		var triesMax = gameController.getTriesMax();
+	render: function(triesMade, triesMax){
 		$("#triesLeft").text(triesMax - triesMade);
-		$("#theHint").text(gameController.getNumberToGuess());
 		var progress = (triesMade / triesMax) * 100;
 		var progressBar = $("#guessbar");
 		progressBar.attr("aria-valuenow", progress);
@@ -100,15 +102,15 @@ var messageView = {
 	init: function(){
 		$("#guess-messages").empty();
 	},
-	render: function(){
+	render: function(guess, tries, hotnessMessage, hotnessLevel){
 		var guessMessage = $("<li></li>");
 		guessMessage.addClass('list-group-item');
-		var msg = gameController.getTriesMade() + ". Guess: ";
-		msg += gameController.getCurrentGuess() + " -> ";
-		msg += gameController.getHotnessMessage();
+		var msg = tries + ". Guess: ";
+		msg += guess + " -> ";
+		msg += hotnessMessage;
 		guessMessage.text(msg);
 		var colorClass = "";
-		switch(gameController.getHotness()){
+		switch(hotnessLevel){
 			case "Hot":
 			case "Hottest":
 				colorClass = "list-group-item-danger";
@@ -125,42 +127,56 @@ var messageView = {
 	}
 };
 
-var winView = {
+var resultView = {
+	winMessageClass: ".winMessage",
+	lossMessageClass: ".lostMessage",
+	resultMessageId: "#resultMessage",
 	init: function(){
-		$("#winMessage").remove();
+		$(this.resultMessageId).hide();
 	},
-	render: function(){
-		$("#instruction").append("<p id='winMessage'>You are a winner!</p>");
+	render: function(hintShown, isWon){
+		var msg, msgClass;
+		if(isWon){
+			msg = "You are a " + (hintShown ? "cheater ;-)" : "winner :-)");
+			msgClass = this.winMessageClass;
+		}else {
+			msg = "You lost! :-(";
+			msgClass = this.lossMessageClass;
+		}
+		
+		var resMsg = $(this.resultMessageId);
+		resMsg.addClass(msgClass);
+		resMsg.text(msg);
+		resMsg.show();
 	}
 };
+
+
+var hintView = {
+	hintClass: ".theHint",
+	init: function(numberToGuess){
+		var hintButton = $("button .glyphicon-eye-open");
+		hintButton.off("click");
+		var hintClass = this.hintClass;
+		hintButton.on("click", function(){
+			gameController.toggleHint();
+		});
+		$(this.hintClass).hide();
+		$(this.hintClass).text(numberToGuess);
+	},
+	render: function(){
+		$(this.hintClass).fadeToggle();
+	}
+};
+
 
 var gameController = {
 	init: function(){
 		game.init();
-		formView.init();
+		formView.init(game.triesMade, game.triesMax);
 		messageView.init();
-		winView.init();
-	},
-	refresh: function(){
-		game.init();
-		messageView.init();
-		winView.init();
-		formView.render();
-	},
-	getTriesMax: function(){
-		return game.triesMax;
-	},
-	getTriesMade: function(){
-		return game.triesMade;
-	},
-	getLastGuess: function(){
-		return game.lastGuess;
-	},
-	getCurrentGuess: function(){
-		return game.currentGuess;
-	},
-	getNumberToGuess: function(){
-		return game.numberToGuess;
+		resultView.init();
+		hintView.init(game.numberToGuess);
 	},
 	guessSubmitted: function(guess){
 		guess = parseInt(guess, 10);
@@ -168,19 +184,22 @@ var gameController = {
 			game.triesMade += 1;
 			game.lastGuess = game.currentGuess;
 			game.currentGuess = guess;
-			if(game.isWon()){
-				winView.render();
+			hotness.updateHotness(game.numberToGuess,
+				game.currentGuess, game.lastGuess);
+			formView.render(game.triesMade, game.triesMax);
+			messageView.render(game.currentGuess,
+				game.triesMade, hotness.getMessage(), hotness.level);
+			if(game.isWon() || game.isLost()){
+				resultView.render(game.hintShown, game.isWon());
 			}
-			hotness.updateHotness(game.numberToGuess, game.currentGuess, game.lastGuess);
-			formView.render();
-			messageView.render();
 		}
 	},
-	getHotnessMessage: function(){
-		return hotness.getMessage();
+	toggleHint: function(){
+		game.hintShown = true;
+		hintView.render();
 	},
-	getHotness: function(){
-		return hotness.hotness;
+	refresh: function(){
+		this.init();
 	}
 };
 

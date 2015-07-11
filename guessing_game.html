@@ -9,6 +9,7 @@
 
   <!-- Bootstrap -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="css/app.css" rel="stylesheet">
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -30,7 +31,6 @@
         </div>
 
 
-
         <div class="row">
           <div class="col-xs-6">
             <form id="guessForm">
@@ -49,7 +49,7 @@
             <button type="button" class="btn btn-default">
               <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
             </button>
-            <span style="display: none;" id="theHint"></span>
+            <div class="theHint"></div>
           </div>
         </div>
 
@@ -72,6 +72,7 @@
               <li class="list-group-item list-group-item-warning">2. Guess: 98 -> Warm and you are getting hotter! Guess lower!</li>
               <li class="list-group-item list-group-item-danger">3. Guess: 85 -> Hot and you are getting hotter! Guess higher!</li>
             </ul>
+            <div id="resultMessage"></div>
           </div>
         </div>
 
