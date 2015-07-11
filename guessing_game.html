@@ -26,19 +26,21 @@
 
 
         <div class="lead" id="instruction">
-          <p>Guess a number between 0 - 100. You have 5 tries to guess the number.</p>
+          <p>Guess a number between 1 - 100. You have <span id="triesLeft"></span> tries left to guess the number.</p>
         </div>
 
 
 
         <div class="row">
           <div class="col-xs-6">
-            <div class="input-group">
-              <input class="form-control" type="text" id="guessedNumber" placeholder="Your number" />
-              <span class="input-group-btn">
-                <button class="btn btn-default" type="button" id="checkGuess">Guess!</button>
-              </span>
-            </div>
+            <form id="guessForm">
+              <div class="input-group">
+                <input class="form-control" type="number" id="guessedNumber" placeholder="Your number" />
+                <span class="input-group-btn">
+                  <button class="btn btn-default" type="submit" id="checkGuess">Guess!</button>
+                </span>
+              </div>
+            </form>
           </div>
           <div class="col-xs-6 btn-group">
             <button type="button" class="btn btn-default">
@@ -54,7 +56,7 @@
         <div class="row">
           <div class="col-xs-6">
             <div class="progress">
-              <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+              <div id="guessbar" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
                 3 of 5 guesses made
               </div>
             </div>
@@ -64,7 +66,7 @@
 
         <div class="row">
           <div class="col-xs-6">
-            <ul class="list-group" id="guess_messages">
+            <ul class="list-group" id="guess-messages">
               <li class="list-group-item list-group-item-info">1. Guess: 15 -> ice cold, guess higher!</li>
               <li class="list-group-item list-group-item-warning">2. Guess: 98 -> Warm and you are getting hotter! Guess lower!</li>
               <li class="list-group-item list-group-item-danger">3. Guess: 85 -> Hot and you are getting hotter! Guess higher!</li>
@@ -80,5 +82,7 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <!-- Include all compiled plugins (below), or include individual files as needed -->
       <script src="js/bootstrap.min.js"></script>
+      <script src="js/jquery-1.11.3.min.js"></script>
+      <script src="js/app.js"></script>
     </body>
     </html>
