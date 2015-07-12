@@ -123,8 +123,6 @@ var messageView = {
 };
 
 var resultView = {
-	winMessageClass: ".winMessage",
-	lossMessageClass: ".lostMessage",
 	resultMessageId: "#resultMessage",
 	init: function(){
 		$(this.resultMessageId).hide();
@@ -133,16 +131,11 @@ var resultView = {
 		var msg, msgClass;
 		if(isWon){
 			msg = "You are a " + (hintShown ? "cheater ;-)" : "winner :-)");
-			msgClass = this.winMessageClass;
 		}else {
 			msg = "You lost! :-(";
-			msgClass = this.lossMessageClass;
 		}
-		
-		var resMsg = $(this.resultMessageId);
-		resMsg.addClass(msgClass);
-		resMsg.text(msg);
-		resMsg.show();
+		$(this.resultMessageId).find(".panel-body").text(msg);
+		$(this.resultMessageId).show();
 	}
 };
 
