@@ -158,17 +158,40 @@ var hintView = {
 };
 
 
+var checkInput = function(inp){
+	var inpNum = parseInt(inp, 10);
+	if(isNaN(inpNum) || guessList.isInList(inpNum)){
+		return null;
+	}
+	return inpNum >= 1 && inpNum <= 100 ? inpNum : null;
+};
+
+var guessList = {
+	guesses: [],
+	init: function(){
+		this.guesses = [];
+	},
+	add: function(guess){
+		this.guesses.push(guess);
+	},
+	isInList: function(guess){
+		return this.guesses.indexOf(guess) > -1 ? true : false;
+	}
+};
+
 var gameController = {
 	init: function(){
 		game.init();
+		guessList.init();
 		formView.init(game.triesMade, game.triesMax);
 		messageView.init();
 		resultView.init();
 		hintView.init(game.numberToGuess);
 	},
 	guessSubmitted: function(guess){
-		guess = parseInt(guess, 10);
-		if(game.triesMax - game.triesMade > 0 && !game.isWon()){
+		guess = checkInput(guess);
+		if(guess && game.triesMax - game.triesMade > 0 && !game.isWon()){
+			guessList.add(guess);
 			game.triesMade += 1;
 			game.lastGuess = game.currentGuess;
 			game.currentGuess = guess;

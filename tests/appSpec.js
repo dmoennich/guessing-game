@@ -162,4 +162,62 @@ describe("The hotness object", function(){
 
 	});
 
+
+	describe("The checkInput function", function(){
+
+		it("transforms strings between 1 and 100 to integers.", function(){
+			expect(checkInput("50")).toBe(50);
+			expect(checkInput("100")).toBe(100);
+			expect(checkInput("1")).toBe(1);
+		});
+
+		it("returns null for strings that are not a number.", function(){
+			expect(checkInput("fgf")).toBe(null);
+		});
+
+		it("returns null for empty strings", function(){
+			expect(checkInput("")).toBe(null);
+		});
+
+		it("returns null if the number is lower than 1", function(){
+			expect(checkInput("0")).toBe(null);
+			expect(checkInput("-1")).toBe(null);
+		});
+
+		it("returns null if the number is higher than 100", function(){
+			expect(checkInput("101")).toBe(null);
+		});
+
+		it("returns null if the guess was already made", function(){
+			guessList.init();
+			guessList.add(15);
+			expect(checkInput("15")).toBe(null);
+		});
+
+	});
+
+
+
+	describe("The guessList object", function(){
+
+		beforeEach(function(){
+			guessList.init();
+		});
+
+		it("stores guesses", function(){
+			guessList.add(25);
+			guessList.add(99);
+			expect(guessList.isInList(25)).toBe(true);
+			expect(guessList.isInList(99)).toBe(true);
+		});
+
+		it("says if a guess is already in the list", function(){
+			guessList.add(42);
+			expect(guessList.isInList(42)).toBe(true);
+			expect(guessList.isInList(43)).toBe(false);
+		});
+
+	});
+
+
 });
