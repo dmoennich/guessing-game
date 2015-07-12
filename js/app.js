@@ -21,17 +21,12 @@ var hotness = {
 	level: "",
 	advice: "",
 	progress: "",
-	max: false,
 	updateHotness: function(toGuess, guess, lastGuess){
-		this.setMax(toGuess, guess);
 		this.setHotness(toGuess, guess);
-		if(!this.max){
+		if(this.level !== "Hottest"){
 			this.setAdvice(toGuess, guess);
 			this.setProgress(toGuess, guess, lastGuess);
 		}
-	},
-	setMax: function(toGuess, guess){
-		this.max = toGuess === guess;
 	},
 	setHotness: function(toGuess, guess){
 		var diff = Math.abs(toGuess - guess);
@@ -58,7 +53,7 @@ var hotness = {
 	},
 	getMessage: function(){
 		var msg;
-		if(this.max){
+		if(this.level === "Hottest"){
 			msg = "You guessed right!";
 		} else {
 			msg = this.level + " and you are getting " + this.progress;
