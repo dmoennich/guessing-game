@@ -67,7 +67,7 @@ var hotness = {
 var formView = {
 	init: function(triesMade, triesMax){
 		var guessForm = $("#guessForm");
-		var refreshButton = $("button .glyphicon-refresh");
+		var refreshButton = $("#refreshButton");
 		guessForm.off("submit");
 		guessForm.on("submit", function(event){
 			event.preventDefault();
@@ -85,10 +85,6 @@ var formView = {
 	render: function(triesMade, triesMax){
 		$("#triesLeft").text(triesMax - triesMade);
 		var progress = (triesMade / triesMax) * 100;
-		var progressBar = $("#guessbar");
-		progressBar.attr("aria-valuenow", progress);
-		progressBar.css("width", progress + "%");
-		progressBar.text(triesMade + " of " + triesMax + " guesses");
 	}
 };
 
@@ -143,17 +139,20 @@ var resultView = {
 var hintView = {
 	hintClass: ".theHint",
 	init: function(numberToGuess){
-		var hintButton = $("button .glyphicon-eye-open");
-		hintButton.off("click");
+		var hintButton = $("#hintButton");
 		var hintClass = this.hintClass;
-		hintButton.on("click", function(){
-			gameController.toggleHint();
+		hintButton.off("click");
+		hintButton.on("click", function(event){
+			$(".theHint").text("number to guess is " + numberToGuess);
 		});
-		$(this.hintClass).hide();
-		$(this.hintClass).text(numberToGuess);
+		//$(this.hintClass).hide();
+
 	},
 	render: function(){
-		$(this.hintClass).fadeToggle();
+		//$(this.hintClass).text("number to guess:" + numberToGuess);
+		//$(this.hintClass).fadeToggle();
+		// var ariaHidden = $(this.hintClass).attr("aria-hidden");
+		// $(this.hintClass).attr("aria-hidden", ariaHidden ? false : true);
 	}
 };
 
@@ -216,4 +215,11 @@ var gameController = {
 
 
 gameController.init();
+
+
+
+
+
+
+
 

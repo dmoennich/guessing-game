@@ -1,0 +1,28 @@
+- overview
+- common problems
+	- unable to interact with elements only with the keyboard
+	- zooming -> broken layout, hidden elements, etc.
+	- screen reader
+		- missing labels
+		- skip to content
+
+- general improvements with aria
+- ngAria
+
+General guideline:
+To create accessible applications, basic principles of semantic HTML, keyboard support, and color contrast should still be the primary focus of developers. ARIA may be used to “fill in the blanks” where web page information isn’t understood or available to a screen reader via HTML alone.
+
+
+Demo:
+- input field aria-label
+- role="log" for list messages
+- add aria-label to buttons
+- role="log" (?) for hint
+- add message for refreshed game
+- remove weird chars (->)
+- add nav and role nav
+
+
+short cuts:
+- ctrl+alt u -> rotor + left/right
+- ctrl+alt left/right -> jump to next section
