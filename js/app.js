@@ -96,8 +96,7 @@ var messageView = {
 	render: function(guess, tries, hotnessMessage, hotnessLevel){
 		var guessMessage = $("<li></li>");
 		guessMessage.addClass('list-group-item');
-		var msg = tries + ". Guess: ";
-		msg += guess + " -> ";
+		var msg = tries + ". guess: ";
 		msg += hotnessMessage;
 		guessMessage.text(msg);
 		var colorClass = "";

@@ -6,9 +6,6 @@
 		- missing labels
 		- skip to content
 
-- general improvements with aria
-- ngAria
-
 General guideline:
 To create accessible applications, basic principles of semantic HTML, keyboard support, and color contrast should still be the primary focus of developers. ARIA may be used to “fill in the blanks” where web page information isn’t understood or available to a screen reader via HTML alone.
 
