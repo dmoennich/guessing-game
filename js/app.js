@@ -56,7 +56,7 @@ var hotness = {
 		if(this.level === "Hottest"){
 			msg = "You guessed right!";
 		} else {
-			msg = this.level + " and you are getting " + this.progress;
+			msg = this.level + ", and you are getting " + this.progress;
 			msg += ". Guess " + this.advice + "!";
 		}
 		return msg;
@@ -97,6 +97,7 @@ var messageView = {
 		var guessMessage = $("<li></li>");
 		guessMessage.addClass('list-group-item');
 		var msg = tries + ". guess: ";
+		msg += guess + " ";
 		msg += hotnessMessage;
 		guessMessage.text(msg);
 		var colorClass = "";
